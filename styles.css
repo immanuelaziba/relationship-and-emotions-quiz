@@ -1,0 +1,89 @@
+/* General Styles */
+body {
+  font-family: "Cormorant Garamond", serif;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(to bottom, #f8e9f8, #e5d4f2);
+  color: #4a4a4a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+header h1 {
+  font-size: 2.5rem;
+  color: #9b5cb3;
+}
+
+header p {
+  font-family: Quicksand;
+  font-size: 1.2rem;
+  color: #6b2d6e;
+}
+
+.quiz-container {
+  background: #f4f4f4;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  max-width: 500px;
+  width: 90%;
+  text-align: center;
+}
+
+#question-text {
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+}
+
+#choices button {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  font-family: Quicksand;
+  font-size: 1rem;
+  background-color: #e3d2e8;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+#choices button:hover {
+  background-color: #d5b9db;
+}
+
+.btn {
+  background: #9b5cb3;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  display: none;
+}
+
+.btn:hover {
+  background: #7b4591;
+}
+
+#feedback {
+  margin-top: 20px;
+  font-size: 1.1rem;
+  color: #6b2d6e;
+}
+
+footer {
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: #6b2d6e;
+}
