@@ -1,165 +1,142 @@
-// Quiz data
-const quizData = [
+
+const questions = [
   {
     question: "You and your partner have a disagreement about finances. What’s your first step?",
     choices: [
-      "A. Avoid the discussion entirely.",
-      "B. Calmly express your concerns and listen to theirs.",
-      "C. Seek advice from friends or family.",
-      "D. Insist on your point of view."
+      "Avoid the discussion entirely.",
+      "Calmly express your concerns and listen to theirs.",
+      "Seek advice from friends or family.",
+      "Insist on your point of view."
     ],
-    answer: "B",
-    feedback: {
-      A: "Avoidance can lead to unresolved issues and resentment.",
-      B: "Correct! Open communication is vital for resolving conflicts constructively.",
-      C: "Seeking advice is helpful but should not replace direct communication.",
-      D: "Insisting on your point of view without compromise can escalate conflicts."
-    }
+    correct: 1,
+    feedback: [
+      "Avoidance can lead to unresolved issues and resentment.",
+      "Correct! Open communication is vital for resolving conflicts constructively.",
+      "Seeking advice is helpful but should not replace direct communication.",
+      "Insisting on your point of view without compromise can escalate conflicts."
+    ]
+  },
+  {
+    question: "Your partner is feeling stressed after work. What’s the best way to show support?",
+    choices: [
+      "Offer to listen if they want to talk.",
+      "Give them space and leave them alone.",
+      "Suggest a solution to their problem.",
+      "Plan a distraction, like a fun outing."
+    ],
+    correct: 0,
+    feedback: [
+      "Correct! Emotional support starts with active listening and understanding their needs.",
+      "Sometimes space is good, but it’s better to ask and confirm what they need.",
+      "Jumping to solutions may make them feel dismissed.",
+      "Distractions are helpful later but may not address immediate emotional needs."
+    ]
+  },
+  {
+    question: "Which action most demonstrates the love language of ‘acts of service’?",
+    choices: [
+      "Giving your partner a thoughtful gift.",
+      "Helping with chores when they’re overwhelmed.",
+      "Spending quality time together.",
+      "Writing them a heartfelt note."
+    ],
+    correct: 1,
+    feedback: [
+      "Thoughtful gifts align with the love language of ‘receiving gifts.’",
+      "Correct! Acts of service focus on actions that ease your partner’s burdens.",
+      "Spending time together represents ‘quality time.’",
+      "Heartfelt notes resonate with ‘words of affirmation.’"
+    ]
   },
   {
     question: "True or False: Conflict is always bad for a relationship.",
     choices: ["True", "False"],
-    answer: "False",
-    feedback: {
-      False: "Correct! Healthy conflict allows partners to address and resolve differences constructively.",
-      True: "Incorrect. While conflict can be uncomfortable, it’s an opportunity to grow and strengthen your relationship."
-    }
+    correct: 1,
+    feedback: [
+      "Not quite. Healthy conflict can strengthen relationships by addressing and resolving differences.",
+      "Correct! The key is how conflicts are handled—focus on mutual understanding and constructive dialogue."
+    ]
   },
   {
-    question: "You notice your friend has been unusually quiet during a group outing. How do you approach them?",
+    question: "What’s the best way to maintain balance in a relationship?",
     choices: [
-      "A. Ask them in private if everything is okay.",
-      "B. Bring it up in front of the group.",
-      "C. Assume they’re just tired and do nothing.",
-      "D. Distract them with light conversation."
+      "Spend all your free time with your partner.",
+      "Prioritize self-care alongside the relationship.",
+      "Focus entirely on your partner’s needs.",
+      "Avoid difficult conversations to keep the peace."
     ],
-    answer: "A",
-    feedback: {
-      A: "Correct! Checking in privately shows care and respect for their emotions.",
-      B: "Discussing personal matters publicly can make them feel uncomfortable.",
-      C: "Ignoring signs of distress might lead to unresolved issues.",
-      D: "Distractions can help temporarily but don’t address underlying concerns."
-    }
+    correct: 1,
+    feedback: [
+      "Spending all your time together can lead to dependency and burnout.",
+      "Correct! A healthy relationship thrives when both partners care for themselves and each other.",
+      "Neglecting your own needs can create resentment.",
+      "Avoiding issues can lead to long-term damage in trust and communication."
+    ]
   }
 ];
 
-// Adaptive question logic
-const adaptiveQuestions = (userResponse) => {
-  if (userResponse === "A") {
-    return {
-      question: "What makes you feel safe to address a conflict directly?",
-      choices: [
-        "A. Knowing the other person won’t judge me.",
-        "B. Feeling prepared with what to say.",
-        "C. Having support from a friend or mediator.",
-        "D. Being in a calm and private setting."
-      ],
-      answer: "D",
-      feedback: {
-        A: "This is helpful. Feeling judged can make conflict resolution harder.",
-        B: "Preparation helps build confidence to address issues effectively.",
-        C: "Support can provide emotional reinforcement when addressing conflicts.",
-        D: "Correct! A calm, private setting minimizes distractions and encourages constructive dialogue."
-      }
-    };
-  }
-  return null;
-};
-
-// DOM elements
-const quizContainer = document.getElementById("quiz");
-const nextButton = document.getElementById("next-btn");
-const resultContainer = document.getElementById("result");
-const scoreDisplay = document.getElementById("score");
-const restartButton = document.getElementById("restart-btn");
-
-let currentQuestionIndex = 0;
+let currentQuestion = 0;
 let score = 0;
-let adaptiveQuestion = null;
 
-// Initialize quiz
-function startQuiz() {
-  resultContainer.classList.add("hidden");
-  nextButton.classList.remove("hidden");
-  currentQuestionIndex = 0;
-  score = 0;
-  adaptiveQuestion = null;
-  showQuestion();
-}
+const questionText = document.getElementById("question-text");
+const choicesContainer = document.getElementById("choices");
+const feedbackContainer = document.getElementById("feedback");
+const nextBtn = document.getElementById("next-btn");
 
-// Show question
-function showQuestion() {
-  const questionData = adaptiveQuestion || quizData[currentQuestionIndex];
-  quizContainer.innerHTML = `
-    <h2>${questionData.question}</h2>
-    ${questionData.choices
-      .map(
-        (choice, index) =>
-          `<div class="choice" data-index="${index}">${choice}</div>`
-      )
-      .join("")}
-  `;
-  document.querySelectorAll(".choice").forEach(choice => {
-    choice.addEventListener("click", selectAnswer);
+function loadQuestion() {
+  feedbackContainer.textContent = "";
+  const current = questions[currentQuestion];
+  questionText.textContent = current.question;
+  choicesContainer.innerHTML = "";
+
+  current.choices.forEach((choice, index) => {
+    const button = document.createElement("button");
+    button.textContent = choice;
+    button.onclick = () => selectAnswer(index);
+    choicesContainer.appendChild(button);
   });
 }
 
-// Handle answer selection
-function selectAnswer(e) {
-  const selectedChoice = e.target;
-  const questionData = adaptiveQuestion || quizData[currentQuestionIndex];
-  const correctAnswer = questionData.answer;
-  const selectedAnswer = selectedChoice.textContent[0];
-
-  // Highlight correct and incorrect choices
-  document.querySelectorAll(".choice").forEach(choice => {
-    const choiceText = choice.textContent[0];
-    choice.classList.add(choiceText === correctAnswer ? "correct" : "wrong");
-  });
-
-  // Feedback and scoring
-  if (selectedAnswer === correctAnswer) {
+function selectAnswer(index) {
+  const current = questions[currentQuestion];
+  feedbackContainer.textContent = current.feedback[index];
+  if (index === current.correct) {
     score++;
-    alert(questionData.feedback[correctAnswer]);
-  } else {
-    alert(questionData.feedback[selectedAnswer] || "Incorrect answer.");
   }
-
-  // Adaptive question handling
-  if (!adaptiveQuestion && currentQuestionIndex === 0) {
-    adaptiveQuestion = adaptiveQuestions(selectedAnswer);
-  }
-
-  // Enable "Next" button
-  nextButton.disabled = false;
+  nextBtn.style.display = "block";
 }
 
-// Next question
-nextButton.addEventListener("click", () => {
-  if (adaptiveQuestion) {
-    adaptiveQuestion = null;
-  } else {
-    currentQuestionIndex++;
-  }
+function showResults() {
+  questionText.textContent = "Quiz Complete!";
+  choicesContainer.innerHTML = "";
+  feedbackContainer.innerHTML = `
+    <h2>Your Results</h2>
+    <p>You scored ${score} out of ${questions.length}.</p>
+    <p>${getResultsMessage(score)}</p>
+  `;
+  nextBtn.style.display = "none";
+}
 
-  if (currentQuestionIndex < quizData.length) {
-    showQuestion();
+function getResultsMessage(score) {
+  if (score === questions.length) {
+    return "Amazing! You have excellent emotional intelligence and relationship skills.";
+  } else if (score >= questions.length * 0.7) {
+    return "Great job! You understand relationships well, but there's room to grow.";
+  } else if (score >= questions.length * 0.4) {
+    return "You’re on the right track. Keep learning and reflecting on your choices.";
+  } else {
+    return "Keep practicing. Developing emotional intelligence takes time and effort.";
+  }
+}
+
+nextBtn.addEventListener("click", () => {
+  currentQuestion++;
+  if (currentQuestion < questions.length) {
+    loadQuestion();
+    nextBtn.style.display = "none";
   } else {
     showResults();
   }
-  nextButton.disabled = true;
 });
 
-// Show results
-function showResults() {
-  quizContainer.innerHTML = "";
-  resultContainer.classList.remove("hidden");
-  nextButton.classList.add("hidden");
-  scoreDisplay.textContent = `You scored ${score} out of ${quizData.length + (adaptiveQuestion ? 1 : 0)}!`;
-}
-
-// Restart quiz
-restartButton.addEventListener("click", startQuiz);
-
-// Start the quiz on load
-startQuiz();
+loadQuestion();
