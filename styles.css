@@ -23,7 +23,7 @@ header h1 {
 }
 
 header p {
-  font-family: Quicksand;
+  font-family: "Segoe UI";
   font-size: 1.2rem;
   color: #6b2d6e;
 }
@@ -48,7 +48,7 @@ header p {
   width: 100%;
   margin: 10px 0;
   padding: 10px;
-  font-family: Quicksand;
+  font-family: "Segoe UI";
   font-size: 1rem;
   background-color: #e3d2e8;
   border: none;
